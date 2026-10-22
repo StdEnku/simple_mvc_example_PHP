@@ -4,4 +4,4 @@
 ↓Renderで公開している  
 https://simple-mvc-example-php.onrender.com/?path=form
   
-!(img)[./qr_code.png]
+![img](./qr_code.png)
