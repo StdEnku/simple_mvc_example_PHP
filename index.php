@@ -1,6 +1,7 @@
 <?php //フロントコントローラ
 
 require_once __DIR__ . '/controllers/PracticeController.php';
+require_once __DIR__ . '/utils/SmallDiContainer.php';
 
 // リクエストメソッドの種類
 $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -16,14 +17,17 @@ $isExistsPathInPost = isset($_POST['path']);
 $path = !$isExistsPathInGet &&  !$isExistsPathInPost ? null :
         ($isExistsPathInGet ?  $_GET['path'] : $_POST['path']);
 
-$practiceController = new PracticeController();
+$diContainer = \SmallDiContainer\DiContainer::GetInstance();
+$diContainer->Register(\controllers\PracticeController::class, true);
 
 if (is_null($path)) {
     clientError("pathクエリパラメータが指定されていません。"); //http://localhost/my-site/
 } else if($path == "form") { 
-    $practiceController->form(); //http://localhost/my-site/?path=form
+    $controller = $diContainer->Resolve(\controllers\PracticeController::class);
+    $controller->Form(); //http://localhost/my-site/?path=form
 } else if($path == "result") {
-    $practiceController->result(); //http://localhost/my-site/?path=form&sendText=xxx
+    $controller = $diContainer->Resolve(\controllers\PracticeController::class);
+    $controller->Result(); //http://localhost/my-site/?path=form&sendText=xxx
 }
 
 // クライアントエラー用のアクション
